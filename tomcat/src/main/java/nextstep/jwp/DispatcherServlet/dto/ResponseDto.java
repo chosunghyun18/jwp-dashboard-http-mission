@@ -1,4 +1,4 @@
-package nextstep.jwp.dto;
+package nextstep.jwp.DispatcherServlet.dto;
 
 public class ResponseDto {
     private final byte[] header;

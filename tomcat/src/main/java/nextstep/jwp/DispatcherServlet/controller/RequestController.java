@@ -1,12 +1,12 @@
-package nextstep.jwp.controller;
+package nextstep.jwp.DispatcherServlet.controller;
 
 import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 import static java.net.HttpURLConnection.HTTP_OK;
 
-import nextstep.jwp.dto.ResponseDto;
-import nextstep.jwp.member.presantation.MemberController;
-import nextstep.jwp.member.presantation.MemberLoginRequest;
-import nextstep.jwp.member.presantation.MemberRegisterRequest;
+import nextstep.jwp.DispatcherServlet.dto.ResponseDto;
+import nextstep.jwp.spring.presantation.MemberController;
+import nextstep.jwp.spring.presantation.MemberLoginRequest;
+import nextstep.jwp.spring.presantation.MemberRegisterRequest;
 
 public class RequestController {
     public final MemberController memberController ;
@@ -17,13 +17,15 @@ public class RequestController {
 
     public ResponseDto handleMember(String requestMethod, String requestSourcePath) {
         String data = "";
-
         if(requestSourcePath.contains("/login?") & requestMethod.equals("GET"))
         {   var request = handleLoginRequest(requestSourcePath);
             if(request != null) data = memberController.getMemberLoginInfo(request);
         }
-
-        if(requestSourcePath.equals("/register?") & requestMethod.equals("GET"))
+        if(requestSourcePath.contains("/login?") & requestMethod.equals("POST"))
+        {   var request = handleLoginRequest(requestSourcePath);
+            if(request != null) data = memberController.getMemberLoginInfo(request);
+        }
+        if(requestSourcePath.equals("/register?") & requestMethod.equals("POST"))
         {   var request = handleRegisterRequest(requestSourcePath);
             if(request != null) data =  memberController.saveMemberInfo(request);
         }
@@ -91,10 +93,17 @@ public class RequestController {
                 "Content-Length: " + data.length(),
                 "",
                 "");
-
+        if(data.contains("[ERROR]")) {
+            String.join("\r\n",
+                "HTTP/1.1 " + 401 + " " + "BADR_REQUEST",
+                "Content-Type: text/html",
+                "Content-Length: " + data.length(),
+                "",
+                "");
+        }
         if(data.isEmpty()) {
             header =String.join("\r\n",
-                    "HTTP/1.1 " + HTTP_NO_CONTENT + " " + "BADR_REQUEST",
+                    "HTTP/1.1 " + HTTP_NO_CONTENT + " " + "BAD_REQUEST",
                     "Content-Type: text/html",
                     "Content-Length: " + 0,
                     "",

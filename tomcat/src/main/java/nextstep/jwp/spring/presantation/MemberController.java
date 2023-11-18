@@ -1,6 +1,6 @@
-package nextstep.jwp.member.presantation;
+package nextstep.jwp.spring.presantation;
 
-import nextstep.jwp.member.application.MemberService;
+import nextstep.jwp.spring.application.MemberService;
 
 public class MemberController {
     public MemberController() {

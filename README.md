@@ -98,6 +98,9 @@ http://localhost:8080/login?account=gugu&password=password으로 접속하면 �
 로그인에 성공하면 응답 헤더에 http status code를 302로 반환하고 /index.html로 리다이렉트 한다.
 로그인에 실패하면 401.html로 리다이렉트한다.
 
+- [x] header 에 location 추가
+- [] 정적 파일을 반환하는 부분은 어디인가 ?
+
 ### 2. POST 방식으로 회원가입
 
 http://localhost:8080/register으로 접속하면 회원가입 페이지(register.html)를 보여준다.

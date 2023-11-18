@@ -1,4 +1,4 @@
-package nextstep.jwp.member.presantation;
+package nextstep.jwp.spring.presantation;
 
 public class MemberRegisterRequest {
     private final String account;

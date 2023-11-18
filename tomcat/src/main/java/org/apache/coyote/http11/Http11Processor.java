@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 
 import java.net.Socket;
 
-import nextstep.jwp.handler.RequestHandler;
+import nextstep.jwp.DispatcherServlet.handler.RequestHandler;
 import nextstep.jwp.exception.UncheckedServletException;
 
 import org.apache.coyote.Processor;

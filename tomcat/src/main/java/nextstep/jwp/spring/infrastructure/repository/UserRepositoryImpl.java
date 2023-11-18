@@ -1,8 +1,8 @@
-package nextstep.jwp.member.infrastructure.repository;
+package nextstep.jwp.spring.infrastructure.repository;
 
-import nextstep.jwp.member.domain.UserRepository;
-import nextstep.jwp.member.domain.model.User;
-import nextstep.jwp.member.infrastructure.db.InMemoryUserRepository;
+import nextstep.jwp.spring.domain.UserRepository;
+import nextstep.jwp.spring.domain.model.User;
+import nextstep.jwp.spring.infrastructure.db.InMemoryUserRepository;
 
 public class UserRepositoryImpl implements UserRepository {
 

@@ -1,9 +1,9 @@
-package nextstep.jwp.member.application;
+package nextstep.jwp.spring.application;
 
 
-import nextstep.jwp.member.domain.UserRepository;
-import nextstep.jwp.member.domain.model.User;
-import nextstep.jwp.member.infrastructure.repository.UserRepositoryImpl;
+import nextstep.jwp.spring.domain.UserRepository;
+import nextstep.jwp.spring.domain.model.User;
+import nextstep.jwp.spring.infrastructure.repository.UserRepositoryImpl;
 
 public class MemberService {
     private final UserRepository userRepository;
@@ -17,7 +17,7 @@ public class MemberService {
         if(user.checkPassword(password)){
             return user.toString();
         }
-        return "WrongPassWord";
+        return "[ERROR] WrongPassWord";
     }
 
     public String saveMember(String account, String email,String password) {

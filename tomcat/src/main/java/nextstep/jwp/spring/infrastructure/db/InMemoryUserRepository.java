@@ -1,6 +1,6 @@
-package nextstep.jwp.member.infrastructure.db;
+package nextstep.jwp.spring.infrastructure.db;
 
-import nextstep.jwp.member.domain.model.User;
+import nextstep.jwp.spring.domain.model.User;
 
 import java.util.Map;
 import java.util.Optional;

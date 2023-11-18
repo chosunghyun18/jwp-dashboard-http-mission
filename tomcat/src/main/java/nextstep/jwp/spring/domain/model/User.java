@@ -1,4 +1,4 @@
-package nextstep.jwp.member.domain.model;
+package nextstep.jwp.spring.domain.model;
 
 public class User {
 
