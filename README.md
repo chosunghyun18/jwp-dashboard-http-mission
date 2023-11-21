@@ -18,6 +18,15 @@
 
 ## ⚙️ 기능 요구 사항
 
+### 0.기본 서버 제작
+
+- 1~3 번의 사항에 외부 라이브러리가 아닌 순수 자바를 사용한다.
+  서버가 시작하는 단계 : Tomcat Start
+1. Java socket 객체를 생성한다. java.net 의 패키지를 사용한다.
+2. 생성한 소켓 객체를 담는 therad 객체를 생성하고 demon 설정 후 스레드 start() 를 호출한다.
+3. System.in.read() 메서드를 호출하여 시스템 입력을 받습니다.
+
+
 ### 1. GET /index.html 응답하기
 
 인덱스 페이지(http://localhost:8080/index.html)에 접근할 수 있도록 만들자.
@@ -114,6 +123,8 @@ http://localhost:8080/register으로 접속하면 회원가입 페이지(registe
 로그인 페이지도 버튼을 눌렀을 때 GET 방식에서 POST 방식으로 전송하도록 변경하자.
 
 ### 3. Cookie에 JSESSIONID 값 저장하기
+
+- 외부 라이브러리인 : jakarta.servlet.http.HttpSession 을 이용한다.
 
 로그인에 성공하면 쿠키와 세션을 활용해서 로그인 상태를 유지해야 한다.
 
