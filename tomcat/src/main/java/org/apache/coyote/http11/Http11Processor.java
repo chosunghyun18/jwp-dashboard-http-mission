@@ -11,16 +11,23 @@ import java.net.Socket;
 import nextstep.jwp.DispatcherServlet.handler.RequestHandler;
 import nextstep.jwp.exception.UncheckedServletException;
 
+import org.apache.coyote.ActionCode;
+import org.apache.coyote.ActionHook;
 import org.apache.coyote.Processor;
 
+import org.apache.coyote.Request;
+import org.apache.coyote.Response;
+import org.apache.tomcat.util.threads.ThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class Http11Processor implements Runnable, Processor {
+public class Http11Processor implements Runnable, Processor, ActionHook {
 
     private static final Logger log = LoggerFactory.getLogger(Http11Processor.class);
-
+    protected Request request ;
+    protected Response response ;
+    protected  ThreadPool	threadPool;
     private final Socket connection;
     private final RequestHandler requestHandler;
 
@@ -40,8 +47,8 @@ public class Http11Processor implements Runnable, Processor {
             final InputStream bufferedInputStream = new BufferedInputStream(inputStream);
             final InputStreamReader inputStreamReader = new InputStreamReader(bufferedInputStream);
             final BufferedReader bf = new BufferedReader(inputStreamReader);
-            String header = bf.readLine();
-            final var response = requestHandler.getResponse(header);
+            String startLine = bf.readLine();
+            final var response = requestHandler.getResponse(startLine);
             outputStream.write(response.getHeader());
             outputStream.write(response.getData());
             outputStream.flush();
@@ -49,4 +56,13 @@ public class Http11Processor implements Runnable, Processor {
             log.error(e.getMessage(), e);
         }
     }
+
+    @Override
+    public void action(ActionCode actionCode, Object param) {
+
+    }
+    void setThreadPool(ThreadPool threadPool){
+
+    }
+
 }

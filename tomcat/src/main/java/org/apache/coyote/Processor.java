@@ -22,6 +22,7 @@ import java.net.Socket;
  * Common interface for processors of all protocols.
  */
 public interface Processor {
+    Adapter getAdapter();
 
     /**
      * Process a connection. This is called whenever an event occurs (e.g. more
@@ -29,4 +30,5 @@ public interface Processor {
      * not currently being processed.
      */
     void process(Socket socket);
+    void setAdapter(Adapter adapter);
 }
