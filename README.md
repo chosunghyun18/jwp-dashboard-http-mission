@@ -109,6 +109,8 @@ http://localhost:8080/login?account=gugu&password=password으로 접속하면 �
 
 - [x] header 에 location 추가
 - [] 정적 파일을 반환하는 부분은 어디인가 ?
+- spring 의 controller 
+- resource
 
 ### 2. POST 방식으로 회원가입
 
