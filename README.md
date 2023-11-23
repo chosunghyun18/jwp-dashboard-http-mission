@@ -167,7 +167,37 @@ Content-Type: text/html;charset=utf-8;
 그리고 로그인된 상태에서 /login 페이지에 HTTP GET method로 접근하면 이미 로그인한 상태니 index.html 페이지로 리다이렉트 처리한다.
 
 
-## ✏️ 미션 진행 요구 사항
+# 🐱 톰캣 구현하기 3단계 - 리팩터링
+## 🚀 미션 설명
 
-- 미션은 [jwp-dashboard-http-mission](https://github.com/speculatingwook/jwp-dashboard-http-mission) 저장소를 Fork & Clone해 시작한다.
-- **기능을 구현하기 전 `README.md`에 구현할 기능 목록을 정리**해 추가한다.
+HTTP 서버를 구현한 코드의 복잡도가 높아졌다.
+
+적절한 클래스를 추가하고 역할을 맡겨서 코드 복잡도를 낮춰보자.
+
+## ⚙️ 기능 요구 사항
+
+### 1. HttpRequest 클래스 구현하기
+
+HTTP 요청을 처리하는 클래스를 추가한다.
+
+HTTP 요청은 어떤 형태로 구성되어 있는가?
+
+클래스로 HTTP 요청을 어떻게 구성하면 좋을까?
+
+HTTP 요청 이미지를 참고해서 구현해보자
+ 
+### 2. HttpResponse 클래스 구현하기
+
+HTTP 응답을 처리하는 클래스를 추가한다.
+
+HTTP 응답은 어떤 형태로 구성되어 있는가?
+
+클라이언트에게 어떤 형태로 HTTP를 응답하면 좋을까?
+
+### 3. Controller 인터페이스 추가하기
+
+HTTP 요청, 응답을 다른 객체에게 역할을 맡기고 나니까 uri 경로에 따른 if절 분기 처리가 남는다.
+
+if절 분기는 어떻게 리팩터링하는게 좋을까?
+
+컨트롤러 인터페이스를 추가하고 각 분기에 있는 로직마다 AbstractController를 상속한 구현체로 만들어보자.

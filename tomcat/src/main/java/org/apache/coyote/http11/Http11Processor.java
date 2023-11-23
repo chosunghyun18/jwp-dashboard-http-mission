@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 
 import java.net.Socket;
 
-import org.apache.catalina.handler.RequestHandler;
+import nextstep.jwp.DispatcherServlet.handler.RequestHandler;
 import nextstep.jwp.exception.UncheckedServletException;
 
 import org.apache.coyote.ActionCode;
@@ -21,7 +21,6 @@ import org.apache.coyote.Response;
 import org.apache.tomcat.util.threads.ThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class Http11Processor implements Runnable, Processor, ActionHook {
 

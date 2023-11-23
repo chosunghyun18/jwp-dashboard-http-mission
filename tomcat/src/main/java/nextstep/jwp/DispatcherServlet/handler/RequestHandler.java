@@ -1,4 +1,4 @@
-package org.apache.catalina.handler;
+package nextstep.jwp.DispatcherServlet.handler;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 
