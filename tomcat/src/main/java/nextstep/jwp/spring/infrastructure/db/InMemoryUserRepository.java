@@ -15,10 +15,11 @@ public class InMemoryUserRepository  {
         database.put(user.getAccount(), user);
     }
 
-    public static void save(User user) {
-        Long usersSize = (long)database.size();
-        user = new User(usersSize,user);
+    public static User save(User user) {
+        Long usersId = (long)database.size()+1;
+        user = new User(usersId,user);
         database.put(user.getAccount(), user);
+        return user;
     }
 
     public static Optional<User> findByAccount(String account) {

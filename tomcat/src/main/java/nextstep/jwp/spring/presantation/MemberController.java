@@ -8,6 +8,7 @@ public class MemberController {
     }
 
     private final MemberService memberService;
+
     public  String getMemberLoginInfo(MemberLoginRequest request) {
         return memberService.getMemberLoginInfo(request.getAccount(),request.getPassword());
     }

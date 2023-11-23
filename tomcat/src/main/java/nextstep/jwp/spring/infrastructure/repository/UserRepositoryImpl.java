@@ -8,8 +8,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User save(User user) {
-        InMemoryUserRepository.save(user);
-        return user;
+        return InMemoryUserRepository.save(user);
     }
 
     @Override
