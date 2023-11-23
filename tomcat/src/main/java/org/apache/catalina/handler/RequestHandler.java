@@ -132,9 +132,9 @@ public class RequestHandler {
     }
 
     public ResponseDto responseBuilderStaticPage(ResponseDto responseDto) throws IOException {
-        String requestSourcePath = "/login.html";
-        Integer responseHeaderCode = 302; // 임시 리다이렉션 상태 코드
-        String responseHeaderMessage = "Found"; // HTTP/1.1에서 302의 기본 응답 메시지는 "Found"
+        String requestSourcePath = "/index.html";
+        Integer responseHeaderCode = 302;
+        String responseHeaderMessage = "Found";
         String contentTypeFile = "text/html";
 
         final InputStream inputStream = new ByteArrayInputStream(responseDto.getData());
@@ -142,8 +142,8 @@ public class RequestHandler {
 
         if (actual.contains("ERROR")) {
             requestSourcePath = "/401.html";
-            responseHeaderCode = 401; // 오류 코드
-            responseHeaderMessage = "Unauthorized"; // 401의 기본 응답 메시지
+            responseHeaderCode = 401;
+            responseHeaderMessage = "Unauthorized";
         }
 
         URL resource = getClass().getClassLoader().getResource("static" + requestSourcePath);
@@ -155,7 +155,7 @@ public class RequestHandler {
                 "HTTP/1.1 " + responseHeaderCode + " " + responseHeaderMessage,
                 "Content-Type: " + contentTypeFile + ";charset=utf-8",
                 "Content-Length: " + contentLength,
-                "Location: " + requestSourcePath, // Location 헤더 추가
+                "Location: " + requestSourcePath,
                 "",
                 "");
 

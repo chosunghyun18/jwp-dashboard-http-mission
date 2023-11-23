@@ -124,6 +124,9 @@ http://localhost:8080/register으로 접속하면 회원가입 페이지(registe
 
 로그인 페이지도 버튼을 눌렀을 때 GET 방식에서 POST 방식으로 전송하도록 변경하자.
 
+- [] post 로 로그인.
+- [] index.html 로 리다이렉트
+
 ### 3. Cookie에 JSESSIONID 값 저장하기
 
 - 외부 라이브러리인 : jakarta.servlet.http.HttpSession 을 이용한다.
