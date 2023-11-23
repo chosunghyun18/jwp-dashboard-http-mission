@@ -108,7 +108,9 @@ http://localhost:8080/login?account=gugu&password=password으로 접속하면 �
 로그인에 실패하면 401.html로 리다이렉트한다.
 
 - [x] header 에 location 추가
-- [] 정적 파일을 반환하는 부분은 어디인가 ?
+- [x] 정적 파일을 반환하는 부분은 어디인가 ? 
+  - 1차 적으로 spring context 를 확인
+  - 2차 1차에 없으면 resource 확인 
 - spring 의 controller 
 - resource
 
