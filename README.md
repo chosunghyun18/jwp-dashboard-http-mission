@@ -140,6 +140,8 @@ HTTP 서버는 세션을 사용해서 서버에 로그인 여부를 저장한다
 
 자바 진영에서 세션 아이디를 전달하는 이름으로 JSESSIONID를 사용한다.
 
+- [x] index.html 을 응답시 jdk 에서 지원하는 uuid 를 사용하여 JSESSIONID를 생성한다.
+
 서버에서 HTTP 응답을 전달할 때 응답 헤더에 Set-Cookie를 추가하고 JSESSIONID=656cef62-e3c4-40bc-a8df-94732920ed46 형태로 값을 전달하면 클라이언트 요청 헤더의 Cookie 필드에 값이 추가된다.
 
 서버로부터 쿠키 설정된 클라이언트의 HTTP Request Header 예시

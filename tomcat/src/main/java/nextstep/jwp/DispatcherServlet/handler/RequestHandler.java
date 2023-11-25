@@ -12,6 +12,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.UUID;
 import java.util.zip.GZIPOutputStream;
 import nextstep.jwp.DispatcherServlet.dto.ResponseDto;
 import nextstep.jwp.DispatcherServlet.controller.RequestController;
@@ -128,6 +129,15 @@ public class RequestHandler {
                 "Content-Length: " + contentLength + " ",
                 "",
                 "");
+        if(requestSourcePath.equals("/index.html")){
+            responseHeader = String.join("\r\n",
+                    "HTTP/1.1 " + responseHeaderCode + " " + responseHeaderMessage + " ",
+                    "Content-Type: " + contentTypeFile + ";charset=utf-8 ",
+                    "Content-Length: " + contentLength + " ",
+                    "Cookie: yummy_cookie=choco; tasty_cookie=strawberry; JSESSIONID="+ UUID.randomUUID(),
+                    "",
+                    "");
+        }
         return new ResponseDto(responseHeader, filesIO);
     }
 
