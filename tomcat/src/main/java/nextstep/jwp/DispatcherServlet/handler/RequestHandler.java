@@ -2,6 +2,7 @@ package nextstep.jwp.DispatcherServlet.handler;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 
+import jakarta.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,16 +17,20 @@ import java.util.UUID;
 import java.util.zip.GZIPOutputStream;
 import nextstep.jwp.DispatcherServlet.dto.ResponseDto;
 import nextstep.jwp.DispatcherServlet.controller.RequestController;
+import org.apache.catalina.util.SessionManager;
 import org.apache.coyote.http11.Http11Processor;
+import org.apache.tomcat.util.http.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RequestHandler {
     private static final Logger log = LoggerFactory.getLogger(Http11Processor.class);
     private final RequestController requestController;
+    private final SessionManager sessionManager;
 
     public RequestHandler() {
         requestController = new RequestController();
+        sessionManager = new SessionManager();
     }
 
     public ResponseDto getResponse(BufferedReader bf) throws IOException {
@@ -34,18 +39,37 @@ public class RequestHandler {
         final String requestSourcePath = httpStartLine[1];
 
         String headers = readHeaders(bf);
+        final boolean checkCookie = isRequestHaveCookie(headers);
         String requestBody = readRequestBody(bf, requestMethod, headers);
 
         if (isMemberRequest(requestMethod,requestSourcePath)) {
+            String sessionId = headers.substring(headers.lastIndexOf("JSESSIONID="));
+            if(checkCookie) {
+                HttpSession session  = sessionManager.findSession(sessionId);
+                if(session.isNew()) {
+                    ResponseDto response = requestController.handleMember(requestMethod, requestSourcePath, requestBody);
+                    sessionManager.add(new Session(response.getData()));
+                    return responseBuilderStaticPage(response,checkCookie);
+                }
+                else {
+                    var user = session.getAttribute("user");
+                    ResponseDto response = responseBuilderStaticPage(new ResponseDto(buildSessionFindHeader(session),user.toString()),checkCookie);
+                    return responseBuilderStaticPage(response,checkCookie);
+                }
+            }
             ResponseDto response = requestController.handleMember(requestMethod, requestSourcePath, requestBody);
-            return responseBuilderStaticPage(response);
+            return responseBuilderStaticPage(response,checkCookie);
         }
 
         if (isImageRequest(requestMethod, requestSourcePath)) {
             return handleImageRequest(requestSourcePath);
         }
 
-        return responseBuilderStaticPage(requestSourcePath);
+        return responseBuilderStaticPage(requestSourcePath,checkCookie);
+    }
+
+    private boolean isRequestHaveCookie(String headers) {
+        return headers.contains("Cookie") ;
     }
 
     private String readHeaders(BufferedReader bf) throws IOException {
@@ -68,7 +92,10 @@ public class RequestHandler {
     }
 
     private boolean isMemberRequest(String requestMethod, String requestSourcePath) {
-        return requestSourcePath.contains("/login")& requestMethod.equals("POST") || (requestSourcePath.contains("/register")&requestMethod.equals("POST"));
+        return (requestSourcePath.contains("/login")& requestMethod.equals("POST")
+                || (requestSourcePath.contains("/login")&requestMethod.equals("get")
+                || (requestSourcePath.contains("/register")&requestMethod.equals("POST")
+        )));
     }
 
     private boolean isImageRequest(String requestMethod, String requestSourcePath) {
@@ -101,8 +128,26 @@ public class RequestHandler {
                 "");
         return new ResponseDto(header, compressedData);
     }
-
-    public ResponseDto responseBuilderStaticPage(String requestSourcePath) throws IOException {
+    private String buildSessionFindHeader(HttpSession session) throws IOException{
+        String contentTypeFile = "text/html";
+        Integer responseHeaderCode = 302;
+        String responseHeaderMessage = "OK";
+        String requestSourcePath = "/index.html";
+        URL resource = getClass().getClassLoader().getResource("static" + requestSourcePath);
+        final Path path = new File(resource.getFile()).toPath();
+        byte[] filesIO = Files.readAllBytes(path);
+        var contentLength = filesIO.length;
+        String responseHeader = String.join("\r\n",
+                "HTTP/1.1 " + responseHeaderCode + " " + responseHeaderMessage,
+                "Content-Type: " + contentTypeFile + ";charset=utf-8",
+                "Content-Length: " + contentLength,
+                "Location: " + requestSourcePath,
+                "Cookie: " + "JSESSIONID="+session.getId(),
+                "",
+                "");
+        return responseHeader;
+    }
+    public ResponseDto responseBuilderStaticPage(String requestSourcePath,Boolean isCookie) throws IOException {
         String contentTypeFile = "text/html";
         Integer responseHeaderCode = 200;
         String responseHeaderMessage = "OK";
@@ -123,25 +168,27 @@ public class RequestHandler {
         final Path path = new File(resource.getFile()).toPath();
         byte[] filesIO = Files.readAllBytes(path);
         var contentLength = filesIO.length;
-        String responseHeader = String.join("\r\n",
-                "HTTP/1.1 " + responseHeaderCode + " " + responseHeaderMessage + " ",
-                "Content-Type: " + contentTypeFile + ";charset=utf-8 ",
-                "Content-Length: " + contentLength + " ",
-                "",
-                "");
-        if(requestSourcePath.equals("/index.html")){
+        String responseHeader="";
+        if(isCookie) {
             responseHeader = String.join("\r\n",
                     "HTTP/1.1 " + responseHeaderCode + " " + responseHeaderMessage + " ",
                     "Content-Type: " + contentTypeFile + ";charset=utf-8 ",
                     "Content-Length: " + contentLength + " ",
-                    "Cookie: yummy_cookie=choco; tasty_cookie=strawberry; JSESSIONID="+ UUID.randomUUID(),
                     "",
                     "");
         }
+        responseHeader = String.join("\r\n",
+                "HTTP/1.1 " + responseHeaderCode + " " + responseHeaderMessage,
+                "Content-Type: " + contentTypeFile + ";charset=utf-8",
+                "Content-Length: " + contentLength,
+                "Location: " + requestSourcePath,
+                "Set-Cookie: " + "JSESSIONID="+UUID.randomUUID(),
+                "",
+                "");
         return new ResponseDto(responseHeader, filesIO);
     }
 
-    public ResponseDto responseBuilderStaticPage(ResponseDto responseDto) throws IOException {
+    public ResponseDto responseBuilderStaticPage(ResponseDto responseDto,Boolean isCookie) throws IOException {
         String requestSourcePath = "/index.html";
         Integer responseHeaderCode = 302;
         String responseHeaderMessage = "Found";
@@ -160,12 +207,21 @@ public class RequestHandler {
         final Path path = new File(resource.getFile()).toPath();
         byte[] filesIO = Files.readAllBytes(path);
         var contentLength = filesIO.length;
-
+        if(isCookie){
+            String responseHeader = String.join("\r\n",
+                    "HTTP/1.1 " + responseHeaderCode + " " + responseHeaderMessage,
+                    "Content-Type: " + contentTypeFile + ";charset=utf-8",
+                    "Content-Length: " + contentLength,
+                    "Location: " + requestSourcePath,
+                    "",
+                    "");
+        }
         String responseHeader = String.join("\r\n",
                 "HTTP/1.1 " + responseHeaderCode + " " + responseHeaderMessage,
                 "Content-Type: " + contentTypeFile + ";charset=utf-8",
                 "Content-Length: " + contentLength,
                 "Location: " + requestSourcePath,
+                "Set-Cookie: " + "JSESSIONID="+UUID.randomUUID(),
                 "",
                 "");
 

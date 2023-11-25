@@ -1,4 +1,4 @@
 package org.apache.catalina.util;
 
-public class StringManager {
+public class StringManager{
 }
