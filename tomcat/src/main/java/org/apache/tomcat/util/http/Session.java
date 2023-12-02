@@ -5,16 +5,42 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionContext;
 import java.util.Enumeration;
 import java.util.UUID;
+import org.apache.catalina.util.SessionManager;
 
 public class Session implements HttpSession {
-    private final String id;
-    private final Object user;
+    private final String sessionId;
+    private final User user;
 
-    public Session(Object user) {
-        this.id = UUID.randomUUID().toString();
+    public Session(String sessionId , User user) {
+        this.sessionId = sessionId;
         this.user = user;
     }
 
+    public static String checkSessionIdExpire(String sessionId) {
+        if(isExpired(sessionId)) {
+            SessionManager.getInstance().remove(sessionId);
+            return UUID.randomUUID().toString();
+        }
+        return sessionId;
+    }
+    private static Boolean isExpired(String id) {
+        // add Busniess Logic for seesionID rule
+        return false;
+    }
+
+    public static String addGuestVisitor() {
+        var generatedID = UUID.randomUUID().toString();
+        SessionManager.getInstance().add(new Session(generatedID,new User()));
+        return generatedID;
+    }
+    @Override
+    public Object getAttribute(String name) {
+        return null;
+    }
+    @Override
+    public boolean isNew() {
+        return user.isNew();
+    }
     @Override
     public long getCreationTime() {
         return 0;
@@ -22,7 +48,7 @@ public class Session implements HttpSession {
 
     @Override
     public String getId() {
-        return this.id;
+        return this.sessionId;
     }
 
     @Override
@@ -39,7 +65,6 @@ public class Session implements HttpSession {
     public void setMaxInactiveInterval(int interval) {
 
     }
-
     @Override
     public int getMaxInactiveInterval() {
         return 0;
@@ -49,13 +74,6 @@ public class Session implements HttpSession {
     public HttpSessionContext getSessionContext() {
         return null;
     }
-
-    @Override
-    public Object getAttribute(String name) {
-        if(name.equals("user")) return user;
-        return null;
-    }
-
     @Override
     public Object getValue(String name) {
         return null;
@@ -73,7 +91,12 @@ public class Session implements HttpSession {
 
     @Override
     public void setAttribute(String name, Object value) {
-
+        if(value.equals(name)) {
+            String[] sessionInfo =value.toString().split("=");
+            String id = sessionInfo[0];
+            String flag = sessionInfo[1];
+            if(flag.equals("false")) SessionManager.getInstance().add(new Session(id,new User("user")));
+        }
     }
 
     @Override
@@ -94,10 +117,5 @@ public class Session implements HttpSession {
     @Override
     public void invalidate() {
 
-    }
-
-    @Override
-    public boolean isNew() {
-        return false;
     }
 }

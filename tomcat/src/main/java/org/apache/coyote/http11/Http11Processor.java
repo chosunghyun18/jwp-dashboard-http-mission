@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 
 import java.net.Socket;
 
-import nextstep.jwp.DispatcherServlet.handler.RequestHandler;
+import org.apache.handler.RequestHandler;
 import nextstep.jwp.exception.UncheckedServletException;
 
 import org.apache.coyote.ActionCode;
@@ -25,15 +25,18 @@ import org.slf4j.LoggerFactory;
 public class Http11Processor implements Runnable, Processor, ActionHook {
 
     private static final Logger log = LoggerFactory.getLogger(Http11Processor.class);
-    protected Request request;
-    protected Response response;
     protected ThreadPool threadPool;
     private final Socket connection;
     private final RequestHandler requestHandler;
 
+    protected final Request request;
+    protected Response response;
+
     public Http11Processor(final Socket connection) {
         this.connection = connection;
         this.requestHandler = new RequestHandler();
+        this.request = new HttpRequest();
+        this.response = new HttpResponse();
     }
 
     @Override
@@ -47,9 +50,11 @@ public class Http11Processor implements Runnable, Processor, ActionHook {
             final InputStream bufferedInputStream = new BufferedInputStream(inputStream);
             final InputStreamReader inputStreamReader = new InputStreamReader(bufferedInputStream);
             final BufferedReader bf = new BufferedReader(inputStreamReader);
-            final var response = requestHandler.getResponse(bf);
-            outputStream.write(response.getHeader());
-            outputStream.write(response.getData());
+            request.setBufferReader(bf);
+            response = request.setResponse(response);
+            final var httpResponse = requestHandler.getResponse(request,response);
+            outputStream.write(httpResponse.getHeader());
+            outputStream.write(httpResponse.getData());
             outputStream.flush();
         } catch (IOException | UncheckedServletException e) {
             log.error(e.getMessage(), e);
