@@ -208,7 +208,7 @@ if절 분기는 어떻게 리팩터링하는게 좋을까?
 # 🐱 톰캣 구현하기 4단계 - 동시성 확장하기
 
 ## 🚀 미션 설명
-
+- 동시성을 고려하여 다중 요청을 처리하자.
 
 ## ⚙️ 기능 요구 사항
 
@@ -221,7 +221,7 @@ Connector 클래스에서 Executors 클래스를 사용해서 ExecutorService �
 스레드 갯수는 maxThreads 라는 변수로 지정한다.
 
 - [] connection pool 을 구현한다.
-- [] request pool 을 구현한다.
+- [] executor pool 을 구현한다.
 
 동시성 컬렉션 사용하기
 

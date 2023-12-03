@@ -13,7 +13,6 @@ public class Tomcat {
     public void start() {
         var connector = new Connector();
         connector.start();
-
         try {
             System.in.read();
         } catch (IOException e) {
