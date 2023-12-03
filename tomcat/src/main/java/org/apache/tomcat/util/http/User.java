@@ -14,4 +14,7 @@ public class User {
     public boolean isNew() {
         return userType.equals(UserType.GUEST);
     }
+    public String getUserType(){
+        return userType.toString();
+    }
 }

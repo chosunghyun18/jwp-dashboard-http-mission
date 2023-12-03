@@ -35,7 +35,7 @@ public class Session implements HttpSession {
     }
     @Override
     public Object getAttribute(String name) {
-        return null;
+        return user.getUserType();
     }
     @Override
     public boolean isNew() {
@@ -76,7 +76,7 @@ public class Session implements HttpSession {
     }
     @Override
     public Object getValue(String name) {
-        return null;
+        return user;
     }
 
     @Override

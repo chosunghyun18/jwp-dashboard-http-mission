@@ -54,7 +54,7 @@ public class Http11Processor implements Runnable, Processor, ActionHook {
             response = request.setResponse(response);
             final var httpResponse = requestHandler.getResponse(request,response);
             outputStream.write(httpResponse.getHeader());
-            outputStream.write(httpResponse.getData());
+            outputStream.write(httpResponse.getBody());
             outputStream.flush();
         } catch (IOException | UncheckedServletException e) {
             log.error(e.getMessage(), e);

@@ -4,18 +4,15 @@ public abstract class Response {
     public void setHook(AbstractProcessor abstractProcessor) {
 
     }
-    public byte[] getHeader() {
-        return null;
-    }
-
-    public byte[] getData() {
-        return null;
-    }
-
-    public void addSetCookieKey() {
+    public void setSetCookieKey(Boolean value) {
 
     }
+
     public void setSessionId(String sessionId) {
+    }
 
+    public Boolean getSetCookieKey() {
+        return null;
     }
 }
+

@@ -1,4 +1,4 @@
-package nextstep.jwp.DispatcherServlet.dto;
+package nextstep.jwp.util;
 
 import jakarta.servlet.http.HttpSession;
 import org.apache.coyote.Request;

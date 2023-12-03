@@ -26,7 +26,7 @@ public class HttpRequest extends Request {
             this.sessionId = extractSessionId(header);
             this.sessionId = Session.checkSessionIdExpire(sessionId);
         }else{
-            response.addSetCookieKey();
+            response.setSetCookieKey(true);
             this.sessionId = Session.addGuestVisitor();
         }
         response.setSessionId(sessionId);

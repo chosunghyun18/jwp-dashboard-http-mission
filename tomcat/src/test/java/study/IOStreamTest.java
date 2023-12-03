@@ -1,6 +1,7 @@
 package study;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -48,10 +49,8 @@ class IOStreamTest {
         void OutputStream은_데이터를_바이트로_처리한다() throws IOException {
             final byte[] bytes = {110, 101, 120, 116, 115, 116, 101, 112};
             final OutputStream outputStream = new ByteArrayOutputStream(bytes.length);
-
             outputStream.write(bytes);
             final String actual = outputStream.toString();
-
             assertThat(actual).isEqualTo("nextstep");
             outputStream.close();
         }

@@ -1,6 +1,7 @@
 package nextstep.jwp.spring.application;
 
 
+import java.util.Optional;
 import nextstep.jwp.spring.domain.UserRepository;
 import nextstep.jwp.spring.domain.model.User;
 import nextstep.jwp.spring.infrastructure.repository.UserRepositoryImpl;
@@ -12,17 +13,16 @@ public class MemberService {
         this.userRepository = new UserRepositoryImpl();
     }
 
-    public String getMemberLoginInfo(String account, String password) {
+    public Optional<User> getMemberLoginInfo(String account, String password) {
         User user = userRepository.findByAccount(account);
-        if(user.checkPassword(password)){
-            return user.toString();
+        if(user.checkPassword(password)) {
+            return Optional.of(user);
         }
-        return "[ERROR] WrongPassWord";
+        return Optional.empty();
     }
 
-    public String saveMember(String account, String email,String password) {
+    public User saveMember(String account, String email,String password) {
         User user = new User(account,email,password);
-        user = userRepository.save(user);
-        return user.toString();
+        return userRepository.save(user);
     }
 }
